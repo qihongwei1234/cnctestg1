@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基础汉字识读测试（一年级）</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>基础汉字识读测试（一年级）📝</h1>
+    <div id="quiz-container"></div>
+    <button id="submit-btn">提交</button>
+    <button id="reset-btn">再测一次</button>
+    <p id="result"></p>
+
+    <script>
+        // 字库部分：预留位置，您可以在此处添加完整字库
+        const characterDataGrade1 = [
+            { character: "一", pinyin: "yī" },
+            { character: "二", pinyin: "èr" },
+            { character: "三", pinyin: "sān" },
+            { character: "十", pinyin: "shí" },
+            { character: "木", pinyin: "mù" },
+            { character: "禾", pinyin: "hé" },
+            { character: "上", pinyin: "shàng" },
+            { character: "下", pinyin: "xià" },
+            { character: "土", pinyin: "tǔ" },
+            { character: "个", pinyin: "gè" },
+            { character: "八", pinyin: "bā" },
+            { character: "入", pinyin: "rù" },
+            { character: "大", pinyin: "dà" },
+            { character: "天", pinyin: "tiān" },
+            { character: "人", pinyin: "rén" },
+            { character: "火", pinyin: "huǒ" },
+            { character: "文", pinyin: "wén" },
+            { character: "六", pinyin: "liù" },
+            { character: "七", pinyin: "qī" },
+            { character: "儿", pinyin: "ér" },
+            { character: "九", pinyin: "jiǔ" },
+            { character: "无", pinyin: "wú" },
+            { character: "口", pinyin: "kǒu" },
+            { character: "日", pinyin: "rì" },
+            { character: "中", pinyin: "zhōng" },
+            { character: "了", pinyin: ["le", "liǎo"] }, // 多音字
+            { character: "子", pinyin: "zǐ" },
+            { character: "门", pinyin: "mén" },
+            { character: "月", pinyin: "yuè" },
+            { character: "不", pinyin: "bù" },
+            { character: "开", pinyin: "kāi" },
+            { character: "四", pinyin: "sì" },
+            { character: "五", pinyin: "wǔ" },
+            { character: "目", pinyin: "mù" },
+            { character: "耳", pinyin: "ěr" },
+            { character: "头", pinyin: "tóu" },
+            { character: "米", pinyin: "mǐ" },
+            { character: "见", pinyin: "jiàn" },
+            { character: "白", pinyin: "bái" },
+            { character: "田", pinyin: "tián" },
+            { character: "电", pinyin: "diàn" },
+            { character: "也", pinyin: "yě" },
+            { character: "长", pinyin: ["cháng", "zhǎng"] }, // 多音字
+            { character: "山", pinyin: "shān" },
+            { character: "出", pinyin: "chū" },
+            { character: "飞", pinyin: "fēi" },
+            { character: "马", pinyin: "mǎ" },
+            { character: "鸟", pinyin: "niǎo" },
+            { character: "云", pinyin: "yún" },
+            { character: "公", pinyin: "gōng" },
+            { character: "车", pinyin: "chē" },
+            { character: "牛", pinyin: "niú" },
+            { character: "羊", pinyin: "yáng" },
+            { character: "小", pinyin: "xiǎo" },
+            { character: "少", pinyin: "shǎo" },
+            { character: "巾", pinyin: "jīn" },
+            { character: "牙", pinyin: "yá" },
+            { character: "尺", pinyin: "chǐ" },
+            { character: "毛", pinyin: "máo" },
+            { character: "卜", pinyin: ["bǔ", "bo"] }, // 多音字
+            { character: "又", pinyin: "yòu" },
+            { character: "心", pinyin: "xīn" },
+            { character: "风", pinyin: "fēng" },
+            { character: "力", pinyin: "lì" },
+            { character: "手", pinyin: "shǒu" },
+            { character: "水", pinyin: "shuǐ" },
+            { character: "广", pinyin: "guǎng" },
+            { character: "升", pinyin: "shēng" },
+            { character: "足", pinyin: "zú" },
+            { character: "走", pinyin: "zǒu" },
+            { character: "方", pinyin: "fāng" },
+            { character: "半", pinyin: "bàn" },
+            { character: "巴", pinyin: "bā" },
+            { character: "业", pinyin: "yè" },
+            { character: "本", pinyin: "běn" },
+            { character: "平", pinyin: "píng" },
+            { character: "书", pinyin: "shū" },
+            { character: "自", pinyin: "zì" },
+            { character: "已", pinyin: "yǐ" },
+            { character: "东", pinyin: "dōng" },
+            { character: "西", pinyin: "xī" },
+            { character: "回", pinyin: "huí" },
+            { character: "片", pinyin: "piàn" },
+            { character: "皮", pinyin: "pí" },
+            { character: "生", pinyin: "shēng" },
+            { character: "里", pinyin: "lǐ" },
+            { character: "果", pinyin: "guǒ" },
+            { character: "几", pinyin: "jǐ" },
+            { character: "用", pinyin: "yòng" },
+            { character: "鱼", pinyin: "yú" },
+            { character: "今", pinyin: "jīn" },
+            { character: "正", pinyin: "zhèng" },
+            { character: "雨", pinyin: "yǔ" },
+            { character: "两", pinyin: "liǎng" },
+            { character: "年", pinyin: "nián" },
+            { character: "左", pinyin: "zuǒ" },
+            { character: "右", pinyin: "yòu" }
+            { character: "万", pinyin: "wàn" },
+            { character: "丁", pinyin: "dīng" },
+            { character: "冬", pinyin: "dōng" },
+            { character: "百", pinyin: "bǎi" },
+            { character: "齐", pinyin: "qí" },
+            { character: "说", pinyin: "shuō" },
+            { character: "话", pinyin: "huà" },
+            { character: "朋", pinyin: "péng" },
+            { character: "友", pinyin: "yǒu" },
+            { character: "春", pinyin: "chūn" },
+            { character: "高", pinyin: "gāo" },
+            { character: "你", pinyin: "nǐ" },
+            { character: "们", pinyin: "men" },
+            { character: "红", pinyin: "hóng" },
+            { character: "绿", pinyin: "lǜ" },
+            { character: "花", pinyin: "huā" },
+            { character: "草", pinyin: "cǎo" },
+            { character: "爷", pinyin: "yé" },
+            { character: "节", pinyin: "jié" },
+            { character: "岁", pinyin: "suì" },
+            { character: "亲", pinyin: ["qīn", "qìng"] }, // 多音字
+            { character: "的", pinyin: ["de", "dí", "dì"] }, // 多音字
+            { character: "行", pinyin: ["háng", "xíng", "héng"] }, // 多音字
+            { character: "古", pinyin: "gǔ" },
+            { character: "声", pinyin: "shēng" },
+            { character: "多", pinyin: "duō" },
+            { character: "处", pinyin: ["chù", "chǔ"] }, // 多音字
+            { character: "知", pinyin: "zhī" },
+            { character: "忙", pinyin: "máng" },
+            { character: "洗", pinyin: "xǐ" },
+            { character: "认", pinyin: "rèn" },
+            { character: "扫", pinyin: "sǎo" },
+            { character: "真", pinyin: "zhēn" },
+            { character: "父", pinyin: "fù" },
+            { character: "母", pinyin: "mǔ" },
+            { character: "爸", pinyin: "bà" },
+            { character: "全", pinyin: "quán" },
+            { character: "关", pinyin: "guān" },
+            { character: "写", pinyin: "xiě" },
+            { character: "完", pinyin: "wán" },
+            { character: "家", pinyin: "jiā" },
+            { character: "看", pinyin: ["kàn", "kān"] }, // 多音字
+            { character: "着", pinyin: ["zhe", "zháo", "zhuó", "zhāo"] }, // 多音字
+            { character: "画", pinyin: "huà" },
+            { character: "笑", pinyin: "xiào" },
+            { character: "兴", pinyin: ["xìng", "xīng"] }, // 多音字
+            { character: "会", pinyin: "huì" },
+            { character: "妈", pinyin: "mā" },
+            { character: "奶", pinyin: "nǎi" },
+            { character: "午", pinyin: "wǔ" },
+            { character: "合", pinyin: "hé" },
+            { character: "放", pinyin: "fàng" },
+            { character: "收", pinyin: "shōu" },
+            { character: "女", pinyin: "nǚ" },
+            { character: "太", pinyin: "tài" },
+            { character: "气", pinyin: "qì" },
+            { character: "早", pinyin: "zǎo" },
+            { character: "去", pinyin: "qù" },
+            { character: "亮", pinyin: "liàng" },
+            { character: "和", pinyin: ["hé", "hè", "huó", "huò", "hú"] }, // 多音字
+            { character: "语", pinyin: "yǔ" },
+            { character: "千", pinyin: "qiān" },
+            { character: "李", pinyin: "lǐ" },
+            { character: "秀", pinyin: "xiù" },
+            { character: "香", pinyin: "xiāng" },
+            { character: "听", pinyin: "tīng" },
+            { character: "唱", pinyin: "chàng" },
+            { character: "连", pinyin: "lián" },
+            { character: "远", pinyin: "yuǎn" },
+            { character: "定", pinyin: "dìng" },
+            { character: "向", pinyin: "xiàng" },
+            { character: "以", pinyin: "yǐ" },
+            { character: "后", pinyin: "hòu" },
+            { character: "更", pinyin: ["gèng", "gēng"] }, // 多音字
+            { character: "主", pinyin: "zhǔ" },
+            { character: "意", pinyin: "yì" },
+            { character: "总", pinyin: "zǒng" },
+            { character: "先", pinyin: "xiān" },
+            { character: "干", pinyin: ["gàn", "gān"] }, // 多音字
+            { character: "赶", pinyin: "gǎn" },
+            { character: "起", pinyin: "qǐ" },
+            { character: "明", pinyin: "míng" },
+            { character: "净", pinyin: "jìng" },
+            { character: "同", pinyin: "tóng" },
+            { character: "工", pinyin: "gōng" },
+            { character: "专", pinyin: "zhuān" },
+            { character: "才", pinyin: "cái" },
+            { character: "级", pinyin: "jí" },
+            { character: "队", pinyin: "duì" },
+            { character: "蚂", pinyin: "mǎ" },
+            { character: "蚁", pinyin: "yǐ" },
+            { character: "前", pinyin: "qián" },
+            { character: "空", pinyin: ["kōng", "kòng"] }, // 多音字
+            { character: "房", pinyin: "fáng" },
+            { character: "网", pinyin: "wǎng" },
+            { character: "诗", pinyin: "shī" },
+            { character: "林", pinyin: "lín" },
+            { character: "童", pinyin: "tóng" },
+            { character: "黄", pinyin: "huáng" },
+            { character: "闭", pinyin: "bì" },
+            { character: "立", pinyin: "lì" },
+            { character: "是", pinyin: "shì" },
+            { character: "朵", pinyin: "duǒ" },
+            { character: "美", pinyin: "měi" },
+            { character: "我", pinyin: "wǒ" },
+            { character: "叶", pinyin: "yè" },
+            { character: "机", pinyin: "jī" },
+            { character: "她", pinyin: "tā" },
+            { character: "他", pinyin: "tā" },
+            { character: "送", pinyin: "sòng" },
+            { character: "过", pinyin: "guò" },
+            { character: "时", pinyin: "shí" },
+            { character: "让", pinyin: "ràng" },
+            { character: "吗", pinyin: "ma" },
+            { character: "吧", pinyin: "ba" },
+            { character: "虫", pinyin: "chóng" },
+            { character: "往", pinyin: "wǎng" },
+            { character: "得", pinyin: "dé" },
+            { character: "很", pinyin: "hěn" },
+            { character: "河", pinyin: "hé" },
+            { character: "姐", pinyin: "jiě" },
+            { character: "借", pinyin: "jiè" },
+            { character: "呢", pinyin: "ne" },
+            { character: "呀", pinyin: "ya" },
+            { character: "哪", pinyin: "nǎ" },
+            { character: "谁", pinyin: "shuí" },
+            { character: "怕", pinyin: "pà" },
+            { character: "跟", pinyin: "gēn" },
+            { character: "凉", pinyin: "liáng" },
+            { character: "量", pinyin: ["liáng", "liàng"] } // 多音字
+            { character: "园", pinyin: "yuán" },
+            { character: "因", pinyin: "yīn" },
+            { character: "为", pinyin: ["wéi", "wèi"] }, // 多音字
+            { character: "脸", pinyin: "liǎn" },
+            { character: "阳", pinyin: "yáng" },
+            { character: "光", pinyin: "guāng" },
+            { character: "可", pinyin: "kě" },
+            { character: "石", pinyin: "shí" },
+            { character: "办", pinyin: "bàn" },
+            { character: "法", pinyin: "fǎ" },
+            { character: "找", pinyin: "zhǎo" },
+            { character: "许", pinyin: "xǔ" },
+            { character: "别", pinyin: "bié" },
+            { character: "到", pinyin: "dào" },
+            { character: "那", pinyin: "nà" },
+            { character: "都", pinyin: "dōu" },
+            { character: "吓", pinyin: "xià" },
+            { character: "叫", pinyin: "jiào" },
+            { character: "再", pinyin: "zài" },
+            { character: "象", pinyin: "xiàng" },
+            { character: "像", pinyin: "xiàng" },
+            { character: "做", pinyin: "zuò" },
+            { character: "点", pinyin: "diǎn" },
+            { character: "照", pinyin: "zhào" },
+            { character: "沙", pinyin: "shā" },
+            { character: "海", pinyin: "hǎi" },
+            { character: "桥", pinyin: "qiáo" },
+            { character: "竹", pinyin: "zhú" },
+            { character: "军", pinyin: "jūn" },
+            { character: "苗", pinyin: "miáo" },
+            { character: "井", pinyin: "jǐng" },
+            { character: "乡", pinyin: "xiāng" },
+            { character: "面", pinyin: "miàn" },
+            { character: "忘", pinyin: "wàng" },
+            { character: "想", pinyin: "xiǎng" },
+            { character: "念", pinyin: "niàn" },
+            { character: "王", pinyin: "wáng" },
+            { character: "从", pinyin: "cóng" },
+            { character: "边", pinyin: "biān" },
+            { character: "这", pinyin: "zhè" },
+            { character: "进", pinyin: "jìn" },
+            { character: "道", pinyin: "dào" },
+            { character: "贝", pinyin: "bèi" },
+            { character: "原", pinyin: "yuán" },
+            { character: "男", pinyin: "nán" },
+            { character: "爱", pinyin: "ài" },
+            { character: "虾", pinyin: "xiā" },
+            { character: "跑", pinyin: "pǎo" },
+            { character: "吹", pinyin: "chuī" },
+            { character: "地", pinyin: ["dì", "de"] }, // 多音字
+            { character: "快", pinyin: "kuài" },
+            { character: "乐", pinyin: ["lè", "yuè"] }, // 多音字
+            { character: "老", pinyin: "lǎo" },
+            { character: "师", pinyin: "shī" },
+            { character: "短", pinyin: "duǎn" },
+            { character: "对", pinyin: "duì" },
+            { character: "冷", pinyin: "lěng" },
+            { character: "淡", pinyin: "dàn" },
+            { character: "热", pinyin: "rè" },
+            { character: "情", pinyin: "qíng" },
+            { character: "拉", pinyin: "lā" },
+            { character: "把", pinyin: "bǎ" },
+            { character: "给", pinyin: "gěi" },
+            { character: "活", pinyin: "huó" },
+            { character: "种", pinyin: ["zhǒng", "zhòng"] }, // 多音字
+            { character: "吃", pinyin: "chī" },
+            { character: "练", pinyin: "liàn" },
+            { character: "习", pinyin: "xí" },
+            { character: "苦", pinyin: "kǔ" },
+            { character: "学", pinyin: "xué" },
+            { character: "非", pinyin: "fēi" },
+            { character: "常", pinyin: "cháng" },
+            { character: "问", pinyin: "wèn" },
+            { character: "间", pinyin: ["jiān", "jiàn"] }, // 多音字
+            { character: "伙", pinyin: "huǒ" },
+            { character: "伴", pinyin: "bàn" },
+            { character: "共", pinyin: "gòng" },
+            { character: "汽", pinyin: "qì" },
+            { character: "分", pinyin: "fēn" },
+            { character: "要", pinyin: "yào" },
+            { character: "没", pinyin: ["méi", "mò"] }, // 多音字
+            { character: "位", pinyin: "wèi" },
+            { character: "孩", pinyin: "hái" },
+            { character: "选", pinyin: "xuǎn" },
+            { character: "北", pinyin: "běi" },
+            { character: "南", pinyin: "nán" },
+            { character: "江", pinyin: "jiāng" },
+            { character: "湖", pinyin: "hú" },
+            { character: "秋", pinyin: "qiū" },
+            { character: "只", pinyin: ["zhī", "zhǐ"] }, // 多音字
+            { character: "星", pinyin: "xīng" },
+            { character: "雪", pinyin: "xuě" },
+            { character: "帮", pinyin: "bāng" },
+            { character: "请", pinyin: "qǐng" },
+            { character: "就", pinyin: "jiù" },
+            { character: "球", pinyin: "qiú" },
+            { character: "玩", pinyin: "wán" },
+            { character: "跳", pinyin: "tiào" },
+            { character: "桃", pinyin: "táo" },
+            { character: "树", pinyin: "shù" },
+            { character: "刚", pinyin: "gāng" },
+            { character: "兰", pinyin: "lán" },
+            { character: "各", pinyin: "gè" },
+            { character: "坐", pinyin: "zuò" },
+            { character: "座", pinyin: "zuò" },
+            { character: "带", pinyin: "dài" },
+            { character: "急", pinyin: "jí" },
+            { character: "名", pinyin: "míng" },
+            { character: "发", pinyin: ["fā", "fà"] }, // 多音字
+            { character: "成", pinyin: "chéng" },
+            { character: "晚", pinyin: "wǎn" },
+            { character: "动", pinyin: "dòng" },
+            { character: "新", pinyin: "xīn" },
+            { character: "有", pinyin: "yǒu" },
+            { character: "在", pinyin: "zài" },
+            { character: "什", pinyin: "shén" },
+            { character: "么", pinyin: "me" },
+            { character: "变", pinyin: "biàn" },
+            { character: "条", pinyin: "tiáo" }
+        ];
+
+        // 随机生成 10 道题目
+        function generateQuiz() {
+            const quizContainer = document.getElementById("quiz-container");
+            quizContainer.innerHTML = ""; // 清空容器
+
+            const selectedChars = [];
+            while (selectedChars.length < 10) {
+                const randomChar = characterData[Math.floor(Math.random() * characterData.length)];
+                if (!selectedChars.includes(randomChar)) {
+                    selectedChars.push(randomChar);
+                }
+            }
+
+            selectedChars.forEach((char, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.className = "question";
+                questionDiv.innerHTML = `
+                    <p>第 ${index + 1} 题：汉字“${char.character}”的拼音是：</p>
+                    <input type="text" data-correct="${char.pinyin}" placeholder="请输入拼音">
+                `;
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        // 提交答案并计算得分
+        document.getElementById("submit-btn").addEventListener("click", () => {
+            const inputs = document.querySelectorAll("#quiz-container input");
+            let score = 0;
+
+            inputs.forEach(input => {
+                const userAnswer = input.value.trim();
+                const correctAnswer = input.getAttribute("data-correct");
+                if (userAnswer === correctAnswer) {
+                    score++;
+                }
+            });
+
+            document.getElementById("result").innerText = `您答对了 ${score} 道题，共 10 道题！`;
+        });
+
+        // 再测一次按钮
+        document.getElementById("reset-btn").addEventListener("click", () => {
+            document.getElementById("result").innerText = "";
+            generateQuiz();
+        });
+
+        // 初始化生成测试题目
+        generateQuiz();
+    </script>
+</body>
+</html>
